@@ -405,7 +405,7 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     debug = os.environ.get('FLASK_ENV') == 'development'
     
-    print("🚀 KeplerAI Backend API Starting...")
+    print("KeplerAI Backend API Starting...")
     print(f"Server running on http://localhost:{port}")
     print(f"Model loaded: {predictor.model is not None}")
     
