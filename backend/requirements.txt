@@ -9,5 +9,4 @@ seaborn==0.12.2
 python-dotenv==1.0.0
 werkzeug==2.3.7
 gunicorn==21.2.0
-sqlite3
 astropy==5.3.2

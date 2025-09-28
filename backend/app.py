@@ -108,6 +108,25 @@ class ExoplanetPredictor:
             for i, class_name in enumerate(self.label_encoder.classes_):
                 confidence_scores[class_name] = float(probabilities[0][i])
             
+            # Merge CONFIRMED and CANDIDATE categories
+            merged_confidence_scores = {}
+            confirmed_candidate_score = 0.0
+            
+            for class_name, score in confidence_scores.items():
+                if class_name in ['CONFIRMED', 'CANDIDATE']:
+                    confirmed_candidate_score += score
+                else:
+                    merged_confidence_scores[class_name] = score
+            
+            # Add merged category
+            merged_confidence_scores['CONFIRMED/CANDIDATE'] = confirmed_candidate_score
+            
+            # Update prediction label if it was CONFIRMED or CANDIDATE
+            if predicted_label in ['CONFIRMED', 'CANDIDATE']:
+                predicted_label = 'CONFIRMED/CANDIDATE'
+            
+            confidence_scores = merged_confidence_scores
+            
             return {
                 'prediction': predicted_label,
                 'confidence_scores': confidence_scores,
