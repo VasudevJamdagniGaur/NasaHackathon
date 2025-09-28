@@ -121,16 +121,22 @@ class ExoplanetPredictor:
             # Add merged category
             merged_confidence_scores['CONFIRMED/CANDIDATE'] = confirmed_candidate_score
             
-            # Update prediction label if it was CONFIRMED or CANDIDATE
-            if predicted_label in ['CONFIRMED', 'CANDIDATE']:
-                predicted_label = 'CONFIRMED/CANDIDATE'
+            # Determine final prediction based on CONFIRMED/CANDIDATE vs FALSE POSITIVE comparison
+            false_positive_score = merged_confidence_scores.get('FALSE POSITIVE', 0.0)
+            
+            if confirmed_candidate_score > false_positive_score:
+                final_prediction = 'CONFIRMED/CANDIDATE'
+                max_confidence = confirmed_candidate_score
+            else:
+                final_prediction = 'FALSE POSITIVE'
+                max_confidence = false_positive_score
             
             confidence_scores = merged_confidence_scores
             
             return {
-                'prediction': predicted_label,
+                'prediction': final_prediction,
                 'confidence_scores': confidence_scores,
-                'max_confidence': float(max(probabilities[0])),
+                'max_confidence': float(max_confidence),
                 'features_used': self.feature_columns
             }
             
